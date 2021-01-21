@@ -5,57 +5,45 @@ import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> _transactions;
+  final Function _deleteTransaction;
 
-  TransactionList(this._transactions);
+  TransactionList(this._transactions, this._deleteTransaction);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250,
+      height: 450,
       child: ListView.builder(
         itemBuilder: (ctx, index) {
           return Card(
-            elevation: 9,
-            child: Container(
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 10,
-                    ),
-                    padding: EdgeInsets.all(7),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.green,
-                        width: 3,
-                      ),
-                    ),
+            elevation: 6,
+            margin: const EdgeInsets.symmetric(
+              vertical: 3,
+              horizontal: 15,
+            ),
+            child: ListTile(
+              leading: CircleAvatar(
+                radius: 30,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FittedBox(
                     child: Text(
-                      '\$ ${_transactions[index].amount.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 20,
-                      ),
+                      '\$${_transactions[index].amount.toStringAsFixed(2)}',
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _transactions[index].title,
-                        style: Theme.of(context).textTheme.headline6,
-                        textAlign: TextAlign.start,
-                      ),
-                      Text(
-                        DateFormat().format(_transactions[index].date.toUtc()),
-                        style: TextStyle(color: Colors.grey),
-                        textAlign: TextAlign.start,
-                      )
-                    ],
-                  ),
-                ],
+                ),
+              ),
+              title: Text(
+                _transactions[index].title,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              subtitle: Text(
+                '${DateFormat.yMMMd().format(_transactions[index].date)}',
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () => _deleteTransaction(_transactions[index].id),
+                color: Theme.of(context).errorColor,
               ),
             ),
           );

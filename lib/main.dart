@@ -23,6 +23,9 @@ class MyApp extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
+              button: TextStyle(
+                color: Colors.white,
+              ),
             ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
@@ -49,13 +52,16 @@ class _MyHomePageState extends State<MyHomePage> {
     Transaction(id: 't2', title: 'hoodies', amount: 35.75, date: DateTime.now())
   ];
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount, DateTime chosenDate) {
     setState(() {
-      _userTransactions.add(Transaction(
+      _userTransactions.add(
+        Transaction(
           id: DateTime.now().toString(),
           title: title,
           amount: amount,
-          date: DateTime.now()));
+          date: chosenDate,
+        ),
+      );
     });
   }
 
@@ -69,6 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
             behavior: HitTestBehavior.opaque,
           );
         });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((transaction) => transaction.id == id);
+    });
   }
 
   List<Transaction> get _recentTransactions {
@@ -88,8 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Expenses Planner'),
         actions: [
           IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () => _startAddNewTransaction(context)),
+            icon: Icon(Icons.add),
+            onPressed: () => _startAddNewTransaction(context),
+          ),
         ],
       ),
       body: ListView(
@@ -100,7 +113,6 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Card(
               color: Theme.of(context).primaryColor,
               child: Container(
-                padding: EdgeInsets.all(5),
                 child: Center(
                   child: Chart(_recentTransactions),
                 ),
@@ -111,11 +123,9 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: Colors.white24,
               borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
-            margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
-            padding: EdgeInsets.all(12),
             child: (_userTransactions.isEmpty)
                 ? Column(
                     children: [
@@ -135,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   )
-                : TransactionList(_userTransactions),
+                : TransactionList(_userTransactions, _deleteTransaction),
           ),
         ],
       ),

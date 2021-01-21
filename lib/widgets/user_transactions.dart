@@ -41,7 +41,7 @@ class _UserTransactionsState extends State<UserTransactions> {
           ),
           margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
           padding: EdgeInsets.all(12),
-          child: TransactionList(_userTransactions),
+          child: TransactionList(_userTransactions, null),
         )
       ],
     );
